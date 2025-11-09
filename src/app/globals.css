@@ -84,7 +84,12 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-image: linear-gradient(to bottom, #FFF8F6, #FFE7E7);
+  }
+  .intro-gradient {
+    background-image: linear-gradient(to bottom, #fff9f9, #ffeef3);
+  }
+  body {
+    background-color: #FDF3F2;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline;
@@ -165,6 +170,24 @@
     25% { transform: rotate(-2deg); }
     75% { transform: rotate(2deg); }
   }
-}
 
-    
+  .journey-button {
+    background: linear-gradient(to right, hsl(var(--primary) / 0.8), hsl(var(--secondary) / 0.8));
+    transition: box-shadow 0.3s ease;
+  }
+  .journey-button:hover {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.5);
+  }
+  .journey-button:hover svg {
+    transform: scale(1.2) rotate(10deg);
+  }
+
+  @keyframes pulse-once {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  
+  .journey-button:active svg {
+    animation: pulse-once 0.4s ease-out;
+  }
+}
