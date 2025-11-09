@@ -182,7 +182,7 @@ export default function HeartfeltPage() {
     { emoji: '🥹', label: 'Emotional' },
     { emoji: '❤️', label: 'Full of Love' },
     { emoji: '🔥', label: 'Passionate' },
-    { ' emoji': '☀️', label: 'Radiant' }
+    { emoji: '☀️', label: 'Radiant' }
   ], []);
 
   const toneOptions = useMemo(() => [
@@ -578,5 +578,7 @@ export default function HeartfeltPage() {
     </AnimatePresence>
   );
 }
+
+    
 
     
