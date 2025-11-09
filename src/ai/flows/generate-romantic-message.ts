@@ -32,14 +32,7 @@ const prompt = ai.definePrompt({
   name: 'romanticMessagePrompt',
   input: {schema: RomanticMessageInputSchema},
   output: {schema: RomanticMessageOutputSchema},
-  prompt: `You are a love expert, skilled in creating heartfelt romantic messages. Generate a personalized romantic message based on the following information:
-
-Favorite Memory: {{{favoriteMemory}}}
-Personality (one word): {{{personality}}}
-Tone: {{{tone}}}
-Favorite Thing: {{{favoriteThing}}}
-
-Create a short, touching quote that reflects these sentiments.`, 
+  prompt: 'You are a love expert. Generate a unique, short, and touching love quote. The quote should be original and heartfelt, suitable for a romantic confession.',
 });
 
 const generateRomanticMessageFlow = ai.defineFlow(

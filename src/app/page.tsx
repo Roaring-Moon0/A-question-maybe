@@ -32,7 +32,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 type ProposalStatus = 'pending' | 'yes' | 'no';
-type SectionName = 'intro' | 'memory' | 'personality' | 'tone' | 'favoriteThing' | 'reveal' | 'proposal';
+type SectionName = 'intro' | 'memory' | 'personality' | 'tone' | 'favoriteThing' | 'observations' | 'reveal' | 'proposal';
 
 const SectionWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -64,6 +64,7 @@ export default function HeartfeltPage() {
     personality: useRef<HTMLDivElement>(null),
     tone: useRef<HTMLDivElement>(null),
     favoriteThing: useRef<HTMLDivElement>(null),
+    observations: useRef<HTMLDivElement>(null),
     reveal: useRef<HTMLDivElement>(null),
     proposal: useRef<HTMLDivElement>(null),
   };
@@ -100,12 +101,16 @@ export default function HeartfeltPage() {
     }
     
     setIsLoading(true);
+    // Scroll to observations section first
+    setTimeout(() => scrollToRef(sectionRefs.observations), 100);
+
     try {
       const values = form.getValues();
       const input: RomanticMessageInput = { ...values };
       const result = await generateRomanticMessage(input);
       setGeneratedMessage(result.message);
-      setTimeout(() => scrollToRef(sectionRefs.reveal), 100);
+      // After message is generated, scroll to reveal section
+      setTimeout(() => scrollToRef(sectionRefs.reveal), 4000); // give time to read observation
     } catch (error) {
       console.error(error);
       toast({
@@ -113,6 +118,8 @@ export default function HeartfeltPage() {
         description: 'Could not generate the message. Please try again.',
         variant: 'destructive',
       });
+      // If error, scroll back to the button
+      scrollToRef(sectionRefs.favoriteThing);
     } finally {
       setIsLoading(false);
     }
@@ -203,7 +210,7 @@ export default function HeartfeltPage() {
                     <FormControl>
                       <Textarea 
                         {...form.register('favoriteMemory')} 
-                        placeholder="Any favorite memory..." 
+                        placeholder="Any favorite memory.." 
                         className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteMemory') ? 'is-typing' : ''}`}
                       />
                     </FormControl>
@@ -295,7 +302,7 @@ export default function HeartfeltPage() {
                     <FormControl>
                       <Textarea 
                         {...form.register('favoriteThing')} 
-                        placeholder="Anything you like about me..."
+                        placeholder="Anything you like about me.."
                         className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteThing') ? 'is-typing' : ''}`}
                       />
                     </FormControl>
@@ -309,6 +316,30 @@ export default function HeartfeltPage() {
               </div>
             </form>
           </Form>
+
+          <div ref={sectionRefs.observations}>
+              <SectionWrapper>
+                <Card className="glassmorphism-card crayon-effect w-full p-6 md:p-8">
+                  <CardContent className="p-0">
+                    <h2 className="text-3xl font-headline mb-6 text-shadow">A few things I've noticed... 💭</h2>
+                    <div className="space-y-4 text-left font-quote text-2xl">
+                      <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
+                        The way your eyes light up when you smile 😊
+                      </motion.p>
+                      <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2 }}>
+                        How you can make anyone laugh, even on a tough day 😂
+                      </motion.p>
+                      <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.0 }}>
+                        That you care so deeply about the people you love ❤️
+                      </motion.p>
+                       <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.8 }}>
+                        Awww... 🥰
+                      </motion.p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </SectionWrapper>
+          </div>
 
           {generatedMessage && (
             <div ref={sectionRefs.reveal}>
