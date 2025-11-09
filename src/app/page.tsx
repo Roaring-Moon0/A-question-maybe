@@ -67,8 +67,8 @@ export default function HeartfeltPage() {
   const [showObservations, setShowObservations] = useState(false);
   const [proposalStatus, setProposalStatus] = useState<ProposalStatus>('pending');
   const [noCount, setNoCount] = useState(0);
-  const [noPosition, setNoPosition] = useState({ x: 0, y: 0 });
-  const [isDodging, setIsDodging] = useState(true);
+  const [noPosition, setNoPosition] = useState<{ x: number | 'auto', y: number | 'auto' }>({ x: 'auto', y: 'auto' });
+  const [isDodging, setIsDodging] = useState(false);
   const noButtonRef = useRef<HTMLButtonElement>(null);
   const proposalContainerRef = useRef<HTMLDivElement>(null);
 
@@ -156,18 +156,24 @@ export default function HeartfeltPage() {
   };
 
   const handleNoInteraction = () => {
-    if (!isDodging || !proposalContainerRef.current || !noButtonRef.current) return;
+    if (!proposalContainerRef.current || !noButtonRef.current) return;
+    
+    if (!isDodging) {
+      setIsDodging(true);
+    }
 
     setNoCount(c => c + 1);
     if (noCount >= 9) {
-      setIsDodging(false);
+      setIsDodging(false); // Stop dodging
       return;
     }
 
     const container = proposalContainerRef.current.getBoundingClientRect();
-    const button = noButtonRef.current.getBoundingClientRect();
+    const button = noButton.current.getBoundingClientRect();
+    
     const newX = Math.random() * (container.width - button.width);
     const newY = Math.random() * (container.height - button.height);
+
     setNoPosition({ x: newX, y: newY });
   };
 
@@ -176,7 +182,7 @@ export default function HeartfeltPage() {
     { emoji: '🥹', label: 'Emotional' },
     { emoji: '❤️', label: 'Full of Love' },
     { emoji: '🔥', label: 'Passionate' },
-    { emoji: '☀️', label: 'Radiant' }
+    { ' emoji': '☀️', label: 'Radiant' }
   ], []);
 
   const toneOptions = useMemo(() => [
@@ -488,24 +494,30 @@ export default function HeartfeltPage() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.5, duration: 0.5 }}
                       className="w-full p-8 rounded-2xl relative"
-                      ref={proposalContainerRef}
                     >
                       <p className="text-xl md:text-2xl font-quote text-muted-foreground mb-4">So… this is it. The thing I’ve been meaning to ask you.</p>
                       <h2 className="text-4xl md:text-5xl font-headline text-shadow mb-4">
                         Will you be my girlfriend? 💍
                       </h2>
                        <p className="text-md text-muted-foreground mb-8">(Yeah… my heart’s been rehearsing this line forever.) 💓</p>
-                      <div className="flex justify-center items-center gap-8 relative h-32 md:h-48">
+                      <div className="flex justify-center items-center gap-8 relative h-32 md:h-48" ref={proposalContainerRef}>
                           <Button size="lg" className="text-2xl px-12 py-8 rounded-full crayon-effect bg-primary/90 hover:bg-primary text-primary-foreground heartbeat shadow-lg hover:shadow-primary/50 transition-all" onClick={() => handleProposalResponse('yes')}>
                             Yes 💕
                           </Button>
                           <Button 
                             ref={noButtonRef}
                             size="lg" 
-                            className="text-2xl px-12 py-8 rounded-full crayon-effect bg-accent/90 hover:bg-accent text-accent-foreground absolute shadow-md hover:shadow-accent/40 transition-all" 
+                            className={cn(
+                              "text-2xl px-12 py-8 rounded-full crayon-effect bg-accent/90 hover:bg-accent text-accent-foreground shadow-md hover:shadow-accent/40 transition-all",
+                              isDodging && "absolute"
+                            )}
                             onMouseEnter={handleNoInteraction}
                             onTouchStart={handleNoInteraction}
-                            onClick={() => !isDodging && handleProposalResponse('no')}
+                            onClick={() => {
+                              if (!isDodging) {
+                                handleProposalResponse('no')
+                              }
+                            }}
                             style={isDodging ? { top: noPosition.y, left: noPosition.x, transition: 'top 0.3s, left 0.3s' } : {}}
                           >
                             No 😔
@@ -566,3 +578,5 @@ export default function HeartfeltPage() {
     </AnimatePresence>
   );
 }
+
+    
