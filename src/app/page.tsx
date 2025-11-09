@@ -294,7 +294,7 @@ export default function HeartfeltPage() {
                                                     <Heart/>How do you feel when you think of me?
                                                   </div>
                                                 </FormLabel>
-                                                <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex justify-start gap-4 pt-2">
+                                                <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-nowrap overflow-x-auto justify-start gap-4 pt-2 pb-2">
                                                 {emotionEmojis.map(({emoji, label}) => (
                                                     <FormItem key={emoji}>
                                                     <FormControl>
@@ -327,7 +327,7 @@ export default function HeartfeltPage() {
                                                 <Edit/>How should this message sound?
                                               </div>
                                             </FormLabel>
-                                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col sm:flex-row gap-4 pt-2">
+                                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-nowrap overflow-x-auto gap-4 pt-2 pb-2">
                                             {toneOptions.map(option => (
                                                 <FormItem key={option.value}>
                                                     <FormControl>
@@ -336,7 +336,7 @@ export default function HeartfeltPage() {
                                                     <FormLabel>
                                                     <div className={`crayon-effect wiggle cursor-pointer px-6 py-3 border-2 rounded-xl flex items-center gap-2 transition-all ${field.value === option.value ? 'bg-accent/50 border-accent-foreground' : 'bg-white/30'}`}>
                                                         <option.icon className="w-5 h-5" />
-                                                        <span className="text-lg">{option.label}</span>
+                                                        <span className="text-lg whitespace-nowrap">{option.label}</span>
                                                     </div>
                                                     </FormLabel>
                                                 </FormItem>
