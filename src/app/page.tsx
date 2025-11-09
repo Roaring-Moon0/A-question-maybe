@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { generateRomanticMessage, type RomanticMessageInput } from '@/ai/flows/generate-romantic-message';
 import { saveProposalResponse } from '@/app/actions';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { Heart, Moon, Smile, Wand2, Wind, Sparkles, User, Brain, Star } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
