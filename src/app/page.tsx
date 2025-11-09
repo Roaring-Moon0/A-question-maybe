@@ -367,7 +367,7 @@ export default function HeartfeltPage() {
                     <CardContent className="p-0">
                       <h2 className="text-3xl font-headline mb-6 text-shadow">So, let me see if I have this right... 💭</h2>
                       <div className="space-y-4 text-left font-quote text-2xl">
-                          <ObservationItem icon={Brain} text={`You remember when... "${form.getValues('favoriteMemory')}"`} delay={0.5} />
+                          <ObservationItem icon={Brain} text={`You remember... "${form.getValues('favoriteMemory')}"`} delay={0.5} />
                           <ObservationItem icon={User} text={`You think I am... "${form.getValues('personality')}"`} delay={1.2} />
                           <ObservationItem icon={Star} text={`And your favorite thing about me is... "${form.getValues('favoriteThing')}"`} delay={2.0} />
                           <motion.p 
