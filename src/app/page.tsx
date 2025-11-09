@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect, useMemo } from 'react';
@@ -8,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { generateRomanticMessage, type RomanticMessageInput } from '@/ai/flows/generate-romantic-message';
 import { saveProposalResponse } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-import { Heart, Moon, Smile, Wand2, Wind, Sparkles } from 'lucide-react';
+import { Heart, Moon, Smile, Wand2, Wind, Sparkles, User, Brain, Star } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -49,6 +50,7 @@ const SectionWrapper = ({ children }: { children: React.ReactNode }) => (
 export default function HeartfeltPage() {
   const [generatedMessage, setGeneratedMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showObservations, setShowObservations] = useState(false);
   const [proposalStatus, setProposalStatus] = useState<ProposalStatus>('pending');
   const [noCount, setNoCount] = useState(0);
   const [noPosition, setNoPosition] = useState({ x: 0, y: 0 });
@@ -101,7 +103,7 @@ export default function HeartfeltPage() {
     }
     
     setIsLoading(true);
-    // Scroll to observations section first
+    setShowObservations(true);
     setTimeout(() => scrollToRef(sectionRefs.observations), 100);
 
     try {
@@ -109,8 +111,7 @@ export default function HeartfeltPage() {
       const input: RomanticMessageInput = { ...values };
       const result = await generateRomanticMessage(input);
       setGeneratedMessage(result.message);
-      // After message is generated, scroll to reveal section
-      setTimeout(() => scrollToRef(sectionRefs.reveal), 4000); // give time to read observation
+      setTimeout(() => scrollToRef(sectionRefs.reveal), 5000); 
     } catch (error) {
       console.error(error);
       toast({
@@ -118,7 +119,7 @@ export default function HeartfeltPage() {
         description: 'Could not generate the message. Please try again.',
         variant: 'destructive',
       });
-      // If error, scroll back to the button
+      setShowObservations(false);
       scrollToRef(sectionRefs.favoriteThing);
     } finally {
       setIsLoading(false);
@@ -183,6 +184,18 @@ export default function HeartfeltPage() {
         </div>
       </div>
     </div>
+  );
+  
+  const ObservationItem = ({ icon, text, delay }: { icon: React.ElementType, text: string, delay: number }) => (
+    <motion.p 
+        className="flex items-center gap-4"
+        initial={{ opacity: 0, x: -20 }} 
+        animate={{ opacity: 1, x: 0 }} 
+        transition={{ delay }}
+    >
+        {React.createElement(icon, { className: "w-6 h-6 text-primary shrink-0" })}
+        <span>{text}</span>
+    </motion.p>
   );
 
   return (
@@ -317,29 +330,30 @@ export default function HeartfeltPage() {
             </form>
           </Form>
 
-          <div ref={sectionRefs.observations}>
-              <SectionWrapper>
-                <Card className="glassmorphism-card crayon-effect w-full p-6 md:p-8">
-                  <CardContent className="p-0">
-                    <h2 className="text-3xl font-headline mb-6 text-shadow">A few things I've noticed... 💭</h2>
-                    <div className="space-y-4 text-left font-quote text-2xl">
-                      <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
-                        The way your eyes light up when you smile 😊
-                      </motion.p>
-                      <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2 }}>
-                        How you can make anyone laugh, even on a tough day 😂
-                      </motion.p>
-                      <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.0 }}>
-                        That you care so deeply about the people you love ❤️
-                      </motion.p>
-                       <motion.p initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.8 }}>
-                        Awww... 🥰
-                      </motion.p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </SectionWrapper>
-          </div>
+          {showObservations && (
+            <div ref={sectionRefs.observations}>
+                <SectionWrapper>
+                  <Card className="glassmorphism-card crayon-effect w-full p-6 md:p-8">
+                    <CardContent className="p-0">
+                      <h2 className="text-3xl font-headline mb-6 text-shadow">So, let me see if I have this right... 💭</h2>
+                      <div className="space-y-4 text-left font-quote text-2xl">
+                          <ObservationItem icon={Brain} text={`You remember when... "${form.getValues('favoriteMemory')}"`} delay={0.5} />
+                          <ObservationItem icon={User} text={`You think I am... "${form.getValues('personality')}"`} delay={1.2} />
+                          <ObservationItem icon={Star} text={`And my favorite thing about you is... "${form.getValues('favoriteThing')}"`} delay={2.0} />
+                          <motion.p 
+                            className="text-center pt-4"
+                            initial={{ opacity: 0, y: 20 }} 
+                            animate={{ opacity: 1, y: 0 }} 
+                            transition={{ delay: 3.0 }}
+                          >
+                            Awww... you noticed these things about me. 🥰
+                          </motion.p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </SectionWrapper>
+            </div>
+          )}
 
           {generatedMessage && (
             <div ref={sectionRefs.reveal}>
@@ -426,3 +440,5 @@ export default function HeartfeltPage() {
     </AnimatePresence>
   );
 }
+
+    
