@@ -1,6 +1,7 @@
 'use client';
 
 import { Heart } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 const HeartIcon = ({ style }: { style: React.CSSProperties }) => (
     <Heart 
@@ -12,16 +13,22 @@ const HeartIcon = ({ style }: { style: React.CSSProperties }) => (
 );
 
 export function FloatingHearts() {
-    const hearts = Array.from({ length: 15 }).map((_, i) => {
-        const style = {
-            left: `${Math.random() * 100}%`,
-            animationDuration: `${Math.random() * 5 + 5}s`,
-            animationDelay: `${Math.random() * 5}s`,
-            width: `${Math.random() * 20 + 10}px`,
-            height: `${Math.random() * 20 + 10}px`,
-        };
-        return <HeartIcon key={i} style={style} />;
-    });
+    const [hearts, setHearts] = useState<React.ReactNode[]>([]);
+
+    useEffect(() => {
+        const generatedHearts = Array.from({ length: 15 }).map((_, i) => {
+            const style = {
+                left: `${Math.random() * 100}%`,
+                animationDuration: `${Math.random() * 5 + 5}s`,
+                animationDelay: `${Math.random() * 5}s`,
+                width: `${Math.random() * 20 + 10}px`,
+                height: `${Math.random() * 20 + 10}px`,
+            };
+            return <HeartIcon key={i} style={style} />;
+        });
+        setHearts(generatedHearts);
+    }, []);
+
 
     return (
         <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1] overflow-hidden">
