@@ -33,25 +33,24 @@ const prompt = ai.definePrompt({
   name: 'romanticMessagePrompt',
   input: {schema: RomanticMessageInputSchema},
   output: {schema: RomanticMessageOutputSchema},
-  prompt: `You are a romantic poet. Your task is to select the perfect quote from a predefined list that best matches the user's desired 'tone'.
+  prompt: `You are a romantic poet and a master of heartfelt messages. Your task is to write a short, beautiful, and personalized romantic quote based on the user's feelings and memories.
 
-Here is the list of available quotes, each with a unique emotional color:
+The message should be a single, impactful sentence or two. It should feel timeless and deeply personal. End with a fitting emoji.
 
-1.  **Timeless & Poetic (Option 1):** "My soul recognized yours the way a melody recognizes its harmony — soft, familiar, inevitable. You are my favorite sound in a world full of noise." 🎵
-2.  **Warm & Real (Option 2):** "You feel like home, even in moments when I didn’t know I was lost. Somehow, everything makes sense when it’s you." ☀️
-3.  **Deep & Cinematic (Option 3):** "There’s a calm that exists only when you’re near. Like the world finally exhales, and everything just... fits." 🌙
-4.  **Gentle & Loving (Option 4):** "If my heart could speak, it would say your name softly — not out of need, but because it feels right." 💖
-5.  **Mysterious & Magical (Option 5):** "Maybe it wasn’t coincidence. Maybe it was the universe quietly whispering, ‘There they are — the one you’ve been waiting for.’" ✨
+Use the following information to craft the perfect message:
+- Their favorite memory: {{{favoriteMemory}}}
+- A word that describes their partner: {{{personality}}}
+- Their favorite thing about their partner: {{{favoriteThing}}}
+- The desired tone: {{{tone}}}
 
-The user has specified the following tone: **{{tone}}**.
+Analyze the inputs and generate a unique message that captures the essence of their relationship.
 
-Analyze the tone and select the *single best quote* from the list above.
+Examples for inspiration, but do not copy them:
+- Poetic: "My soul recognized yours the way a melody recognizes its harmony—soft, familiar, inevitable. You are my favorite sound in a world full of noise."
+- Flirty: "You feel like home, even in moments when I didn’t know I was lost. Somehow, everything makes sense when it’s you."
+- Silly: "Maybe it wasn’t coincidence. Maybe it was the universe quietly whispering, ‘There they are—the one you’ve been waiting for.’"
 
-- If the tone is 'Poetic', choose Option 1.
-- If the tone is 'Flirty', choose Option 2 or Option 4. Be playful.
-- If the tone is 'Silly', choose Option 5, as it has a magical, whimsical feel.
-
-Respond *only* with the full text of the chosen quote, including the emoji. Do not add any extra commentary or labels.
+Generate a new, original message that is perfectly suited to the user's provided details and desired tone.
   `,
 });
 
