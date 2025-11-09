@@ -225,7 +225,7 @@ export default function HeartfeltPage() {
                                             <FormItem>
                                                 <FormLabel>
                                                   <div className="text-xl font-headline flex items-center gap-2">
-                                                    <Camera/>What's your favourite memory with me
+                                                    <Camera/>What's your favourite memory with me?
                                                   </div>
                                                 </FormLabel>
                                                 <FormControl>
@@ -470,5 +470,3 @@ export default function HeartfeltPage() {
     </AnimatePresence>
   );
 }
-
-    
