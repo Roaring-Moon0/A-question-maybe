@@ -13,10 +13,10 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const RomanticMessageInputSchema = z.object({
-  favoriteMemory: z.string().describe('User\'s favorite memory together'),
-  personality: z.string().describe('One word to describe the user'),
+  favoriteMemory: z.string().describe("User's favorite memory together"),
+  personality: z.string().describe("One word to describe the user's partner"),
   tone: z.enum(['Poetic', 'Flirty', 'Silly']).describe('Desired tone of the message'),
-  favoriteThing: z.string().describe('User\'s favorite thing about the other person'),
+  favoriteThing: z.string().describe("User's favorite thing about the other person"),
 });
 export type RomanticMessageInput = z.infer<typeof RomanticMessageInputSchema>;
 
@@ -54,3 +54,5 @@ const generateRomanticMessageFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    
