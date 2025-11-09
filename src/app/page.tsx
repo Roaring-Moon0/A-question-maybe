@@ -9,14 +9,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { generateRomanticMessage, type RomanticMessageInput } from '@/ai/flows/generate-romantic-message';
 import { saveProposalResponse } from '@/app/actions';
 import { useToast } from '@/components/ui/use-toast';
-import { Heart, Smile, Wand2, Wind, Sparkles, User, Brain, Star, Feather, Edit, Gift, Camera } from 'lucide-react';
+import { Heart, Smile, Wand2, Feather, Sparkles } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -187,6 +186,18 @@ export default function HeartfeltPage() {
         {text}
     </motion.p>
   );
+  
+  const YesResponseItem = ({ text, delay }: { text: React.ReactNode, delay: number }) => (
+    <motion.p
+      className="text-xl md:text-2xl font-quote text-shadow mb-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 1.5 }}
+    >
+      {text}
+    </motion.p>
+  );
+
 
   return (
     <AnimatePresence>
@@ -376,7 +387,7 @@ export default function HeartfeltPage() {
                         <AnimatedFormItem delay={1.2}>
                             <div className="pt-8 text-center">
                                  <Button type="button" size="lg" className="crayon-effect bg-primary/80 hover:bg-primary text-primary-foreground text-lg px-8 py-6 rounded-2xl" onClick={handleGenerateMessage} disabled={isLoading}>
-                                    {isLoading ? <Wind className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
+                                    {isLoading ? <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}><Sparkles/></motion.div> : <Sparkles />}
                                     {isLoading ? 'Creating Magic...' : 'I’m ready to hear what’s in your heart… 💌'}
                                 </Button>
                             </div>
@@ -394,7 +405,7 @@ export default function HeartfeltPage() {
                       <h2 className="text-3xl font-headline mb-6 text-shadow">You know… I’ve been thinking about what you said.</h2>
                       <div className="space-y-4 text-left font-quote text-2xl">
                           <ObservationItem text={<>You remembered ‘{form.getValues('favoriteMemory')}’ — and somehow, that memory felt warmer just because it had you in it.</>} delay={0.5} />
-                          <ObservationItem text={<>You described me as ‘{form.getValues('personality')}’ — maybe because there’s something so effortlessly real about the way we are together.</>} delay={1.5} />
+                          <ObservationItem text={<>You described us as ‘{form.getValues('personality')}’ — maybe because there’s something so effortlessly real about the way we are together.</>} delay={1.5} />
                           <ObservationItem text={<>And your favorite little thing, ‘{form.getValues('favoriteThing')}’ — that one made me smile more than you’d guess.</>} delay={2.5} />
                           <ObservationItem text={<>It’s funny, isn’t it? How every tiny thing about you turns ordinary moments into something I never want to forget. 💌</>} delay={3.5} />
                           <ObservationItem text={<>I don’t know when it happened… but somewhere between those small memories and late-night thoughts, you became something I can’t stop caring about.</>} delay={4.5} />
@@ -422,7 +433,7 @@ export default function HeartfeltPage() {
                       “<Typewriter text={generatedMessage} />”
                     </p>
                     <Button variant="link" className="mt-8 text-foreground" onClick={() => scrollToRef(sectionRefs.proposal)}>
-                      And one more thing...
+                       And before I say the one thing I’ve been holding in…
                     </Button>
                   </CardContent>
                 </Card>
@@ -440,23 +451,25 @@ export default function HeartfeltPage() {
                   className="w-full p-8 rounded-2xl relative"
                   ref={proposalContainerRef}
                 >
-                  <h2 className="text-4xl md:text-5xl font-headline text-shadow mb-8">
-                    So… will you be my girlfriend? 💍
+                  <p className="text-xl md:text-2xl font-quote text-muted-foreground mb-4">So… this is it. The thing I’ve been meaning to ask you.</p>
+                  <h2 className="text-4xl md:text-5xl font-headline text-shadow mb-4">
+                    Will you be my girlfriend? 💍
                   </h2>
-                  <div className="flex justify-center items-center gap-8 relative h-48">
-                      <Button size="lg" className="text-2xl px-12 py-8 rounded-2xl crayon-effect bg-primary/80 hover:bg-primary text-primary-foreground heartbeat" onClick={() => handleProposalResponse('yes')}>
+                   <p className="text-md text-muted-foreground mb-8">(Yeah… my heart’s been rehearsing this line forever.) 💓</p>
+                  <div className="flex justify-center items-center gap-8 relative h-32 md:h-48">
+                      <Button size="lg" className="text-2xl px-12 py-8 rounded-full crayon-effect bg-primary/90 hover:bg-primary text-primary-foreground heartbeat shadow-lg hover:shadow-primary/50 transition-all" onClick={() => handleProposalResponse('yes')}>
                         Yes 💕
                       </Button>
                       <Button 
                         ref={noButtonRef}
                         size="lg" 
-                        className="text-2xl px-12 py-8 rounded-2xl crayon-effect bg-accent/80 hover:bg-accent text-accent-foreground absolute" 
+                        className="text-2xl px-12 py-8 rounded-full crayon-effect bg-accent/90 hover:bg-accent text-accent-foreground absolute shadow-md hover:shadow-accent/40 transition-all" 
                         onMouseEnter={handleNoInteraction}
                         onTouchStart={handleNoInteraction}
                         onClick={() => !isDodging && handleProposalResponse('no')}
                         style={isDodging ? { top: noPosition.y, left: noPosition.x, transition: 'top 0.3s, left 0.3s' } : {}}
                       >
-                        No 🙃
+                        No 😔
                       </Button>
                   </div>
                 </motion.div>
@@ -467,24 +480,42 @@ export default function HeartfeltPage() {
       )}
 
       {proposalStatus === 'yes' && (
-        <motion.div key="yes" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="min-h-screen flex items-center justify-center text-center">
+        <motion.div key="yes" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{duration: 1.5}} className="min-h-screen flex items-center justify-center text-center p-4">
           <Confetti />
-          <Card className="glassmorphism-card crayon-effect p-8">
-            <CardContent className="p-0">
-              <h2 className="font-quote text-3xl mb-4">You just made my world brighter. Here’s to forever — one smile at a time.</h2>
-              <p className="text-muted-foreground mt-8">Some moments aren’t meant to be explained — just felt.</p>
+          <FloatingHearts />
+          <Card className="glassmorphism-card crayon-effect p-8 max-w-2xl">
+            <CardContent className="p-0 space-y-3">
+              <YesResponseItem text="You really said yes…? 🥹💗" delay={0.5} />
+              <YesResponseItem text="Wait, I swear I’m not crying, you are. 😭" delay={1.5} />
+              <YesResponseItem text="You just made my world stop for a second." delay={2.5} />
+              <YesResponseItem text="I can’t even explain how much this means — but I’ll spend forever trying to show you. 💖" delay={3.5} />
+              <YesResponseItem text="You didn’t just say yes to a question… you said yes to me." delay={5} />
+              
+              <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 6.5, duration: 1.5}} className="pt-8">
+                <p className="text-lg font-quote text-muted-foreground">“And now that you’ve said it…” 💭</p>
+                <p className="text-lg font-quote text-muted-foreground mb-6">You already have my number — just text me, or call me. ☎️💌</p>
+                <p className="text-lg md:text-xl font-body mb-8">I’ll be waiting… with the biggest smile. 😊💓</p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Button className="crayon-effect" onMouseEnter={(e) => e.currentTarget.classList.add('wiggle')}>Okay… I’m calling you 😳💞</Button>
+                    <Button variant="ghost" onClick={() => window.location.reload()}>Let’s make more memories 💫</Button>
+                </div>
+              </motion.div>
+
+               <motion.p initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 8, duration: 1.5}} className="text-center pt-10 font-quote text-sm text-muted-foreground/80">
+                No matter how many pages this story gets… you’ll always be my favorite line. ✨
+              </motion.p>
             </CardContent>
           </Card>
         </motion.div>
       )}
 
       {proposalStatus === 'no' && (
-        <motion.div key="no" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }} className="min-h-screen flex items-center justify-center text-center bg-gray-900/50">
+        <motion.div key="no" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }} className="min-h-screen flex items-center justify-center text-center bg-gray-900/50 p-4">
           <Card className="glassmorphism-card crayon-effect p-8 max-w-md">
             <CardContent className="p-0 space-y-4">
               <p className="text-lg">Okay okay… got it 😅</p>
               <p>You don’t like me — I know. Maybe I wasn’t the one for you. But whenever you hear my name again, I hope you’ll whisper,</p>
-              <p className="font-bold text-xl">‘Damn… he was different.’ 🥹💔</p>
+              <p className="font-bold text-xl font-headline">‘Damn… he was different.’ 🥹💔</p>
               <p className="font-quote text-2xl pt-6"><Typewriter text="Not all stories end in forever — some just leave warmth behind." /></p>
             </CardContent>
           </Card>
@@ -493,3 +524,5 @@ export default function HeartfeltPage() {
     </AnimatePresence>
   );
 }
+
+    
