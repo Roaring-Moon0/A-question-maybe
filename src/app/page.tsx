@@ -203,7 +203,7 @@ export default function HeartfeltPage() {
                     <FormControl>
                       <Textarea 
                         {...form.register('favoriteMemory')} 
-                        placeholder="The time we got caught in the rain and danced..." 
+                        placeholder="That one time we built a pillow fort and watched old movies all day..." 
                         className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteMemory') ? 'is-typing' : ''}`}
                       />
                     </FormControl>
@@ -295,7 +295,7 @@ export default function HeartfeltPage() {
                     <FormControl>
                       <Textarea 
                         {...form.register('favoriteThing')} 
-                        placeholder="The way your eyes light up when you talk about something you love…"
+                        placeholder="Anything you like about me..."
                         className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteThing') ? 'is-typing' : ''}`}
                       />
                     </FormControl>
