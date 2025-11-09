@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
@@ -8,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { generateRomanticMessage, type RomanticMessageInput } from '@/ai/flows/generate-romantic-message';
 import { saveProposalResponse } from '@/app/actions';
 import { useToast } from '@/components/ui/use-toast';
-import { Heart, Moon, Smile, Wand2, Wind, Sparkles, User, Brain, Star } from 'lucide-react';
+import { Heart, Moon, Smile, Wand2, Wind, Sparkles, User, Brain, Star, Feather, Edit, Gift, Camera } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -159,7 +160,7 @@ export default function HeartfeltPage() {
   ], []);
 
   const toneOptions = useMemo(() => [
-    { value: 'Poetic', icon: Moon, label: 'Poetic' },
+    { value: 'Poetic', icon: Feather, label: 'Poetic' },
     { value: 'Flirty', icon: Wand2, label: 'Flirty' },
     { value: 'Silly', icon: Smile, label: 'Silly' }
   ], []);
@@ -222,7 +223,7 @@ export default function HeartfeltPage() {
                                         name="favoriteMemory"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="text-xl font-headline">What's your favourite memory with me</FormLabel>
+                                                <FormLabel className="text-xl font-headline flex items-center gap-2"><Camera/>What's your favourite memory with me</FormLabel>
                                                 <FormControl>
                                                     <Textarea
                                                         {...field}
@@ -240,7 +241,7 @@ export default function HeartfeltPage() {
                                         name="personality"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="text-xl font-headline">If you had to describe me in one word, what would it be?</FormLabel>
+                                                <FormLabel className="text-xl font-headline flex items-center gap-2"><User/>If you had to describe me in one word, what would it be?</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         {...field}
@@ -258,7 +259,7 @@ export default function HeartfeltPage() {
                                         name="favoriteThing"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="text-xl font-headline">What’s your favorite thing about me?</FormLabel>
+                                                <FormLabel className="text-xl font-headline flex items-center gap-2"><Gift/>What’s your favorite thing about me?</FormLabel>
                                                 <FormControl>
                                                     <Textarea
                                                         {...field}
@@ -276,7 +277,7 @@ export default function HeartfeltPage() {
                                         name="emotion"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="text-xl font-headline">How do you feel when you think of me?</FormLabel>
+                                                <FormLabel className="text-xl font-headline flex items-center gap-2"><Heart/>How do you feel when you think of me?</FormLabel>
                                                 <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex justify-start gap-4 pt-2">
                                                 {emotionEmojis.map(({emoji, label}) => (
                                                     <FormItem key={emoji}>
@@ -305,7 +306,7 @@ export default function HeartfeltPage() {
                                         name="tone"
                                         render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel className="text-xl font-headline">How should this message sound?</FormLabel>
+                                            <FormLabel className="text-xl font-headline flex items-center gap-2"><Edit/>How should this message sound?</FormLabel>
                                             <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col sm:flex-row gap-4 pt-2">
                                             {toneOptions.map(option => (
                                                 <FormItem key={option.value}>
@@ -348,7 +349,7 @@ export default function HeartfeltPage() {
                       <div className="space-y-4 text-left font-quote text-2xl">
                           <ObservationItem icon={Brain} text={`You remember when... "${form.getValues('favoriteMemory')}"`} delay={0.5} />
                           <ObservationItem icon={User} text={`You think I am... "${form.getValues('personality')}"`} delay={1.2} />
-                          <ObservationItem icon={Star} text={`And my favorite thing about you is... "${form.getValues('favoriteThing')}"`} delay={2.0} />
+                          <ObservationItem icon={Star} text={`And your favorite thing about me is... "${form.getValues('favoriteThing')}"`} delay={2.0} />
                           <motion.p 
                             className="text-center pt-4"
                             initial={{ opacity: 0, y: 20 }} 
