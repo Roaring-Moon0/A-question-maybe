@@ -133,7 +133,7 @@ export default function HeartfeltPage() {
     }
   };
 
-  const handleNoHover = () => {
+  const handleNoInteraction = () => {
     if (!isDodging || !proposalContainerRef.current || !noButtonRef.current) return;
 
     setNoCount(c => c + 1);
@@ -353,7 +353,8 @@ export default function HeartfeltPage() {
                         ref={noButtonRef}
                         size="lg" 
                         className="text-2xl px-12 py-8 rounded-2xl crayon-effect bg-accent/80 hover:bg-accent text-accent-foreground absolute" 
-                        onMouseEnter={handleNoHover}
+                        onMouseEnter={handleNoInteraction}
+                        onTouchStart={handleNoInteraction}
                         onClick={() => !isDodging && handleProposalResponse('no')}
                         style={isDodging ? { top: noPosition.y, left: noPosition.x, transition: 'top 0.3s, left 0.3s' } : {}}
                       >
