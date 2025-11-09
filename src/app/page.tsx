@@ -11,12 +11,13 @@ import { useToast } from '@/components/ui/use-toast';
 import { Heart, Moon, Smile, Wand2, Wind, Sparkles, User, Brain, Star } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { FloatingHearts } from '@/components/heartfelt-unveiling/floating-hearts';
 import { Typewriter } from '@/components/heartfelt-unveiling/typewriter';
@@ -32,7 +33,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 type ProposalStatus = 'pending' | 'yes' | 'no';
-type SectionName = 'intro' | 'memory' | 'personality' | 'tone' | 'favoriteThing' | 'observations' | 'reveal' | 'proposal';
+type SectionName = 'intro' | 'form' | 'observations' | 'reveal' | 'proposal';
 
 const SectionWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -61,10 +62,7 @@ export default function HeartfeltPage() {
 
   const sectionRefs = {
     intro: useRef<HTMLDivElement>(null),
-    memory: useRef<HTMLDivElement>(null),
-    personality: useRef<HTMLDivElement>(null),
-    tone: useRef<HTMLDivElement>(null),
-    favoriteThing: useRef<HTMLDivElement>(null),
+    form: useRef<HTMLDivElement>(null),
     observations: useRef<HTMLDivElement>(null),
     reveal: useRef<HTMLDivElement>(null),
     proposal: useRef<HTMLDivElement>(null),
@@ -94,10 +92,6 @@ export default function HeartfeltPage() {
         description: 'Please fill out all the fields to create your perfect message.',
         variant: 'destructive',
       });
-      const errorField = Object.keys(form.formState.errors)[0] as SectionName;
-      if (sectionRefs[errorField]) {
-          scrollToRef(sectionRefs[errorField]);
-      }
       return;
     }
     
@@ -119,7 +113,7 @@ export default function HeartfeltPage() {
         variant: 'destructive',
       });
       setShowObservations(false);
-      scrollToRef(sectionRefs.favoriteThing);
+      scrollToRef(sectionRefs.form);
     } finally {
       setIsLoading(false);
     }
@@ -207,128 +201,144 @@ export default function HeartfeltPage() {
             <SectionWrapper>
               <h1 className="text-5xl md:text-7xl font-bold text-shadow mb-4">A Message from the Heart</h1>
               <p className="text-lg md:text-xl text-muted-foreground mb-8">Let’s create something beautiful together…</p>
-              <Button size="lg" className="crayon-effect bg-primary/80 hover:bg-primary text-primary-foreground text-lg px-8 py-6 rounded-2xl" onClick={() => scrollToRef(sectionRefs.memory)}>
+              <Button size="lg" className="crayon-effect bg-primary/80 hover:bg-primary text-primary-foreground text-lg px-8 py-6 rounded-2xl" onClick={() => scrollToRef(sectionRefs.form)}>
                 Begin the Journey <Heart className="ml-2 fill-white" />
               </Button>
             </SectionWrapper>
           </div>
 
-          <Form {...form}>
-            <form>
-              <div ref={sectionRefs.memory}>
-                <SectionWrapper>
-                  <FormItem className="w-full">
-                    <FormLabel className="text-2xl font-headline mb-4">What's your favourite memory with me</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        {...form.register('favoriteMemory')} 
-                        placeholder="your favourite memory or memories..." 
-                        className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteMemory') ? 'is-typing' : ''}`}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </SectionWrapper>
-              </div>
+          <div ref={sectionRefs.form}>
+            <SectionWrapper>
+                <Card className="glassmorphism-card crayon-effect w-full max-h-[80vh] flex flex-col">
+                    <CardHeader>
+                        <CardTitle className="text-3xl font-headline text-shadow">Tell me everything...</CardTitle>
+                    </CardHeader>
+                    <ScrollArea className="flex-grow">
+                        <CardContent>
+                            <Form {...form}>
+                                <form className="space-y-8 text-left">
+                                    <FormField
+                                        control={form.control}
+                                        name="favoriteMemory"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-xl font-headline">What's your favourite memory with me</FormLabel>
+                                                <FormControl>
+                                                    <Textarea
+                                                        {...field}
+                                                        placeholder="your favourite memory or memories..."
+                                                        className={`crayon-effect crayon-underline bg-white/50 h-24 text-lg ${form.watch('favoriteMemory') ? 'is-typing' : ''}`}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    
+                                    <FormField
+                                        control={form.control}
+                                        name="personality"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-xl font-headline">If you had to describe me in one word, what would it be?</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        {...field}
+                                                        placeholder="Kind, funny, thoughtful..."
+                                                        className="crayon-effect text-lg h-12 bg-white/50"
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
-              <div ref={sectionRefs.personality}>
-                <SectionWrapper>
-                  <div className="w-full space-y-12">
-                     <FormItem>
-                        <FormLabel className="text-2xl font-headline mb-4">If you had to describe me in one word, what would it be?</FormLabel>
-                        <FormControl>
-                          <Input 
-                            {...form.register('personality')} 
-                            placeholder="Kind, funny, thoughtful..." 
-                            className="crayon-effect text-center text-lg h-14 bg-white/50" 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    
-                      <FormField
-                        control={form.control}
-                        name="emotion"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-2xl font-headline mb-4">How do you feel when you think of me?</FormLabel>
-                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex justify-center gap-4">
-                              {emotionEmojis.map(({emoji, label}) => (
-                                <FormItem key={emoji}>
-                                  <FormControl>
-                                    <RadioGroupItem value={emoji} className="sr-only" />
-                                  </FormControl>
-                                  <FormLabel>
-                                    <motion.div
-                                      whileHover={{ scale: 1.2, rotate: 5 }}
-                                      whileTap={{ scale: 0.9 }}
-                                      className={`text-5xl cursor-pointer transition-all duration-200 ${field.value === emoji ? 'scale-125 opacity-100' : 'opacity-50'}`}
-                                      aria-label={label}
-                                    >
-                                      {emoji}
-                                    </motion.div>
-                                  </FormLabel>
-                                </FormItem>
-                              ))}
-                            </RadioGroup>
-                          </FormItem>
-                        )}
-                      />
-                  </div>
-                </SectionWrapper>
-              </div>
-              
-              <div ref={sectionRefs.tone}>
-                <SectionWrapper>
-                  <FormField
-                    control={form.control}
-                    name="tone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-2xl font-headline mb-6">How should this message sound?</FormLabel>
-                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col sm:flex-row gap-4">
-                          {toneOptions.map(option => (
-                             <FormItem key={option.value}>
-                                <FormControl>
-                                  <RadioGroupItem value={option.value} className="sr-only" />
-                                </FormControl>
-                                <FormLabel>
-                                  <div className={`crayon-effect wiggle cursor-pointer px-6 py-3 border-2 rounded-xl flex items-center gap-2 transition-all ${field.value === option.value ? 'bg-accent/50 border-accent-foreground' : 'bg-white/30'}`}>
-                                    <option.icon className="w-5 h-5" />
-                                    <span className="text-lg">{option.label}</span>
-                                  </div>
-                                </FormLabel>
-                            </FormItem>
-                          ))}
-                        </RadioGroup>
-                      </FormItem>
-                    )}
-                  />
-                </SectionWrapper>
-              </div>
+                                    <FormField
+                                        control={form.control}
+                                        name="favoriteThing"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-xl font-headline">What’s your favorite thing about me?</FormLabel>
+                                                <FormControl>
+                                                    <Textarea
+                                                        {...field}
+                                                        placeholder="anything you like about me..."
+                                                        className={`crayon-effect crayon-underline bg-white/50 h-24 text-lg ${form.watch('favoriteThing') ? 'is-typing' : ''}`}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    
+                                    <FormField
+                                        control={form.control}
+                                        name="emotion"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-xl font-headline">How do you feel when you think of me?</FormLabel>
+                                                <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex justify-start gap-4 pt-2">
+                                                {emotionEmojis.map(({emoji, label}) => (
+                                                    <FormItem key={emoji}>
+                                                    <FormControl>
+                                                        <RadioGroupItem value={emoji} className="sr-only" />
+                                                    </FormControl>
+                                                    <FormLabel>
+                                                        <motion.div
+                                                        whileHover={{ scale: 1.2, rotate: 5 }}
+                                                        whileTap={{ scale: 0.9 }}
+                                                        className={`text-4xl cursor-pointer transition-all duration-200 ${field.value === emoji ? 'scale-110 opacity-100' : 'opacity-50'}`}
+                                                        aria-label={label}
+                                                        >
+                                                        {emoji}
+                                                        </motion.div>
+                                                    </FormLabel>
+                                                    </FormItem>
+                                                ))}
+                                                </RadioGroup>
+                                            </FormItem>
+                                        )}
+                                    />
 
-              <div ref={sectionRefs.favoriteThing}>
-                <SectionWrapper>
-                   <FormItem className="w-full">
-                    <FormLabel className="text-2xl font-headline mb-4">What’s your favorite thing about me?</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        {...form.register('favoriteThing')} 
-                        placeholder="anything you like about me..."
-                        className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteThing') ? 'is-typing' : ''}`}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                    <Button type="button" size="lg" className="mt-8 crayon-effect bg-primary/80 hover:bg-primary text-primary-foreground text-lg px-8 py-6 rounded-2xl" onClick={handleGenerateMessage} disabled={isLoading}>
-                      {isLoading ? <Wind className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
-                      {isLoading ? 'Creating Magic...' : 'Reveal the Message'}
-                    </Button>
-                  </FormItem>
-                </SectionWrapper>
-              </div>
-            </form>
-          </Form>
+                                    <FormField
+                                        control={form.control}
+                                        name="tone"
+                                        render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-xl font-headline">How should this message sound?</FormLabel>
+                                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col sm:flex-row gap-4 pt-2">
+                                            {toneOptions.map(option => (
+                                                <FormItem key={option.value}>
+                                                    <FormControl>
+                                                    <RadioGroupItem value={option.value} className="sr-only" />
+                                                    </FormControl>
+                                                    <FormLabel>
+                                                    <div className={`crayon-effect wiggle cursor-pointer px-6 py-3 border-2 rounded-xl flex items-center gap-2 transition-all ${field.value === option.value ? 'bg-accent/50 border-accent-foreground' : 'bg-white/30'}`}>
+                                                        <option.icon className="w-5 h-5" />
+                                                        <span className="text-lg">{option.label}</span>
+                                                    </div>
+                                                    </FormLabel>
+                                                </FormItem>
+                                            ))}
+                                            </RadioGroup>
+                                        </FormItem>
+                                        )}
+                                    />
 
+                                </form>
+                            </Form>
+                        </CardContent>
+                    </ScrollArea>
+                    <div className="p-6 pt-0 text-center">
+                         <Button type="button" size="lg" className="mt-4 crayon-effect bg-primary/80 hover:bg-primary text-primary-foreground text-lg px-8 py-6 rounded-2xl" onClick={handleGenerateMessage} disabled={isLoading}>
+                            {isLoading ? <Wind className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
+                            {isLoading ? 'Creating Magic...' : 'Reveal the Message'}
+                        </Button>
+                    </div>
+                </Card>
+            </SectionWrapper>
+          </div>
+          
           {showObservations && (
             <div ref={sectionRefs.observations}>
                 <SectionWrapper>
