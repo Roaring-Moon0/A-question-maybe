@@ -393,11 +393,6 @@ export default function HeartfeltPage() {
                     <p className="font-quote text-2xl md:text-3xl leading-relaxed mb-8">
                       “<Typewriter text={generatedMessage} />”
                     </p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <FlipCard title="Our Favorite Moment" content={form.getValues('favoriteMemory')} />
-                        <FlipCard title="What I Love About You" content={form.getValues('favoriteThing')} />
-                        <FlipCard title="The Way You Make Me Feel" content={form.getValues('emotion')} />
-                    </div>
                     <Button variant="link" className="mt-8 text-foreground" onClick={() => scrollToRef(sectionRefs.proposal)}>
                       And one more thing...
                     </Button>
