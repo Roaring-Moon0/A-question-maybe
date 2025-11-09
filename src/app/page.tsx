@@ -169,7 +169,7 @@ export default function HeartfeltPage() {
     }
 
     const container = proposalContainerRef.current.getBoundingClientRect();
-    const button = noButton.current.getBoundingClientRect();
+    const button = noButtonRef.current.getBoundingClientRect();
     
     const newX = Math.random() * (container.width - button.width);
     const newY = Math.random() * (container.height - button.height);
