@@ -19,6 +19,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { FloatingHearts } from '@/components/heartfelt-unveiling/floating-hearts';
 import { Typewriter } from '@/components/heartfelt-unveiling/typewriter';
@@ -175,16 +176,15 @@ export default function HeartfeltPage() {
     { value: 'Flirty', icon: Wand2, label: 'Flirty' },
     { value: 'Silly', icon: Smile, label: 'Silly' }
   ], []);
-  
-  const ObservationItem = ({ icon, text, delay }: { icon: React.ElementType, text: string, delay: number }) => (
+
+  const ObservationItem = ({ text, delay }: { text: React.ReactNode, delay: number }) => (
     <motion.p 
-        className="flex items-center gap-4"
-        initial={{ opacity: 0, x: -20 }} 
-        animate={{ opacity: 1, x: 0 }} 
-        transition={{ delay }}
+        className="text-lg md:text-xl font-quote text-foreground/90 mb-4"
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ delay, duration: 1.5 }}
     >
-        {React.createElement(icon, { className: "w-6 h-6 text-primary shrink-0" })}
-        <span>{text}</span>
+        {text}
     </motion.p>
   );
 
@@ -391,18 +391,20 @@ export default function HeartfeltPage() {
                 <SectionWrapper>
                   <Card className="glassmorphism-card crayon-effect w-full p-6 md:p-8">
                     <CardContent className="p-0">
-                      <h2 className="text-3xl font-headline mb-6 text-shadow">So, let me see if I have this right... 💭</h2>
+                      <h2 className="text-3xl font-headline mb-6 text-shadow">You know… I’ve been thinking about what you said.</h2>
                       <div className="space-y-4 text-left font-quote text-2xl">
-                          <ObservationItem icon={Brain} text={`You remember... "${form.getValues('favoriteMemory')}"`} delay={0.5} />
-                          <ObservationItem icon={User} text={`You think we are... "${form.getValues('personality')}"`} delay={1.2} />
-                          <ObservationItem icon={Star} text={`And your favorite little thing is... "${form.getValues('favoriteThing')}"`} delay={2.0} />
-                          <motion.p 
-                            className="text-center pt-4"
-                            initial={{ opacity: 0, y: 20 }} 
-                            animate={{ opacity: 1, y: 0 }} 
-                            transition={{ delay: 3.0 }}
+                          <ObservationItem text={<>You remembered ‘{form.getValues('favoriteMemory')}’ — and somehow, that memory felt warmer just because it had you in it.</>} delay={0.5} />
+                          <ObservationItem text={<>You described me as ‘{form.getValues('personality')}’ — maybe because there’s something so effortlessly real about the way we are together.</>} delay={1.5} />
+                          <ObservationItem text={<>And your favorite little thing, ‘{form.getValues('favoriteThing')}’ — that one made me smile more than you’d guess.</>} delay={2.5} />
+                          <ObservationItem text={<>It’s funny, isn’t it? How every tiny thing about you turns ordinary moments into something I never want to forget. 💌</>} delay={3.5} />
+                          <ObservationItem text={<>I don’t know when it happened… but somewhere between those small memories and late-night thoughts, you became something I can’t stop caring about.</>} delay={4.5} />
+                          <motion.p
+                            className="text-center pt-6 font-body text-base text-muted-foreground"
+                            initial={{ opacity: 0 }} 
+                            animate={{ opacity: 1 }} 
+                            transition={{ delay: 6.0, duration: 1.5 }}
                           >
-                            Awww... you noticed these things about me. 🥰
+                            “So maybe this isn’t just about what we remember — it’s about what we’re becoming.” 🌙
                           </motion.p>
                       </div>
                     </CardContent>
