@@ -116,7 +116,6 @@ export default function HeartfeltPage() {
       const input: RomanticMessageInput = { ...values };
       const result = await generateRomanticMessage(input);
       setGeneratedMessage(result.message);
-      setTimeout(() => scrollToRef(sectionRefs.reveal), 5000); 
     } catch (error) {
       console.error(error);
       toast({
@@ -426,7 +425,7 @@ export default function HeartfeltPage() {
 
           {generatedMessage && (
             <div ref={sectionRefs.reveal}>
-              <SectionWrapper>
+              <SectionWrapper className="min-h-0 py-16">
                 <Card className="glassmorphism-card crayon-effect w-full p-6 md:p-8">
                   <CardContent className="p-0">
                     <p className="font-quote text-2xl md:text-3xl leading-relaxed mb-8">
@@ -524,5 +523,3 @@ export default function HeartfeltPage() {
     </AnimatePresence>
   );
 }
-
-    
