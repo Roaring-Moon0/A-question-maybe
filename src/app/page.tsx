@@ -221,7 +221,7 @@ export default function HeartfeltPage() {
   return (
     <AnimatePresence>
       {proposalStatus === 'pending' && (
-        <motion.main key="form" exit={{ opacity: 0 }} className="w-full max-w-2xl mx-auto">
+        <motion.main key="form" exit={{ opacity: 0 }} className="w-full">
           
           <div ref={sectionRefs.intro}>
              <SectionWrapper className="intro-gradient">
@@ -258,7 +258,10 @@ export default function HeartfeltPage() {
                   <Button 
                       size="lg" 
                       className="crayon-effect bg-primary/80 hover:bg-primary text-primary-foreground text-lg px-8 py-6 rounded-2xl journey-button" 
-                      onClick={() => setAppState('form')}
+                      onClick={() => {
+                        setAppState('form');
+                        setTimeout(() => scrollToRef(sectionRefs.formIntro), 100);
+                      }}
                   >
                       Begin the Journey <Heart className="ml-2 fill-white w-5 h-5 transition-transform" />
                   </Button>
@@ -283,6 +286,7 @@ export default function HeartfeltPage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 1.5 }}
+                className="w-full max-w-2xl mx-auto"
               >
 
               <div ref={sectionRefs.formIntro}>
@@ -353,26 +357,28 @@ export default function HeartfeltPage() {
                                                 <Heart className="w-6 h-6 mt-1 text-primary/80 shrink-0" />
                                                 <span>“When you think of me, what do you feel?”</span>
                                             </FormLabel>
-                                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-wrap justify-center gap-4 pt-4">
-                                            {emotionEmojis.map(({emoji, label}) => (
-                                                <FormItem key={emoji}>
-                                                <FormControl>
-                                                    <RadioGroupItem value={emoji} className="sr-only" />
-                                                </FormControl>
-                                                <FormLabel>
-                                                    <motion.div
-                                                    whileHover={{ scale: 1.2, rotate: 5 }}
-                                                    whileTap={{ scale: 0.9 }}
-                                                    className={`text-4xl cursor-pointer transition-all duration-200 ${field.value === emoji ? 'scale-125 opacity-100' : 'opacity-60'}`}
-                                                    aria-label={label}
-                                                    title={label}
-                                                    >
-                                                    {emoji}
-                                                    </motion.div>
-                                                </FormLabel>
-                                                </FormItem>
-                                            ))}
-                                            </RadioGroup>
+                                            <ScrollArea className="w-full whitespace-nowrap">
+                                                <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex justify-start gap-4 pt-4 px-4">
+                                                {emotionEmojis.map(({emoji, label}) => (
+                                                    <FormItem key={emoji}>
+                                                    <FormControl>
+                                                        <RadioGroupItem value={emoji} className="sr-only" />
+                                                    </FormControl>
+                                                    <FormLabel>
+                                                        <motion.div
+                                                        whileHover={{ scale: 1.2, rotate: 5 }}
+                                                        whileTap={{ scale: 0.9 }}
+                                                        className={`text-4xl cursor-pointer transition-all duration-200 ${field.value === emoji ? 'scale-125 opacity-100' : 'opacity-60'}`}
+                                                        aria-label={label}
+                                                        title={label}
+                                                        >
+                                                        {emoji}
+                                                        </motion.div>
+                                                    </FormLabel>
+                                                    </FormItem>
+                                                ))}
+                                                </RadioGroup>
+                                            </ScrollArea>
                                         </FormItem>
                                     )}
                                 />
@@ -388,21 +394,23 @@ export default function HeartfeltPage() {
                                             <MessageCircleQuestion className="w-6 h-6 mt-1 text-primary/80 shrink-0" />
                                           <span>“And how should this message sound?”</span>
                                         </FormLabel>
-                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex justify-center gap-4 pt-4">
-                                        {toneOptions.map(option => (
-                                            <FormItem key={option.value}>
-                                                <FormControl>
-                                                <RadioGroupItem value={option.value} className="sr-only" />
-                                                </FormControl>
-                                                <FormLabel>
-                                                <div className={`crayon-effect wiggle cursor-pointer px-6 py-3 border-2 rounded-xl flex items-center gap-2 transition-all ${field.value === option.value ? 'bg-accent/50 border-accent-foreground' : 'bg-white/30'}`}>
-                                                    <option.icon className="w-5 h-5" />
-                                                    <span className="text-lg whitespace-nowrap">{option.label}</span>
-                                                </div>
-                                                </FormLabel>
-                                            </FormItem>
-                                        ))}
-                                        </RadioGroup>
+                                        <ScrollArea className="w-full whitespace-nowrap">
+                                            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex justify-start gap-4 pt-4 px-4">
+                                            {toneOptions.map(option => (
+                                                <FormItem key={option.value}>
+                                                    <FormControl>
+                                                    <RadioGroupItem value={option.value} className="sr-only" />
+                                                    </FormControl>
+                                                    <FormLabel>
+                                                    <div className={`crayon-effect wiggle cursor-pointer px-6 py-3 border-2 rounded-xl flex items-center gap-2 transition-all ${field.value === option.value ? 'bg-accent/50 border-accent-foreground' : 'bg-white/30'}`}>
+                                                        <option.icon className="w-5 h-5" />
+                                                        <span className="text-lg whitespace-nowrap">{option.label}</span>
+                                                    </div>
+                                                    </FormLabel>
+                                                </FormItem>
+                                            ))}
+                                            </RadioGroup>
+                                        </ScrollArea>
                                     </FormItem>
                                     )}
                                 />
