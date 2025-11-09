@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
@@ -224,7 +222,7 @@ export default function HeartfeltPage() {
                     <FormControl>
                       <Textarea 
                         {...form.register('favoriteMemory')} 
-                        placeholder="That one time we built a pillow fort and watched old movies all day..." 
+                        placeholder="your favourite memory or memories..." 
                         className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteMemory') ? 'is-typing' : ''}`}
                       />
                     </FormControl>
@@ -316,7 +314,7 @@ export default function HeartfeltPage() {
                     <FormControl>
                       <Textarea 
                         {...form.register('favoriteThing')} 
-                        placeholder="The way you laugh at my silly jokes, even when they're not that funny."
+                        placeholder="anything you like about me..."
                         className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteThing') ? 'is-typing' : ''}`}
                       />
                     </FormControl>
@@ -441,4 +439,3 @@ export default function HeartfeltPage() {
     </AnimatePresence>
   );
 }
-
