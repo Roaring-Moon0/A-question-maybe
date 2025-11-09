@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
@@ -219,11 +220,11 @@ export default function HeartfeltPage() {
               <div ref={sectionRefs.memory}>
                 <SectionWrapper>
                   <FormItem className="w-full">
-                    <FormLabel className="text-2xl font-headline mb-4">What’s your favorite memory together?</FormLabel>
+                    <FormLabel className="text-2xl font-headline mb-4">What's your favourite memory with me</FormLabel>
                     <FormControl>
                       <Textarea 
                         {...form.register('favoriteMemory')} 
-                        placeholder="Any favorite memory.." 
+                        placeholder="That one time we built a pillow fort and watched old movies all day..." 
                         className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteMemory') ? 'is-typing' : ''}`}
                       />
                     </FormControl>
@@ -315,7 +316,7 @@ export default function HeartfeltPage() {
                     <FormControl>
                       <Textarea 
                         {...form.register('favoriteThing')} 
-                        placeholder="Anything you like about me.."
+                        placeholder="The way you laugh at my silly jokes, even when they're not that funny."
                         className={`crayon-effect crayon-underline bg-white/50 h-32 text-lg ${form.watch('favoriteThing') ? 'is-typing' : ''}`}
                       />
                     </FormControl>
@@ -440,3 +441,4 @@ export default function HeartfeltPage() {
     </AnimatePresence>
   );
 }
+
