@@ -196,6 +196,7 @@ export default function HeartfeltPage() {
 
 
   const handleNoInteraction = () => {
+    if (isDodging && noCount < 10) return; // Don't trigger if already dodging within limit
     const newCount = noCount + 1;
     setNoCount(newCount);
 
@@ -204,10 +205,8 @@ export default function HeartfeltPage() {
       return;
     }
 
-    if (!isDodging) {
-      setIsDodging(true); // Start dodging on the first interaction.
-    }
-
+    setIsDodging(true); // Start dodging on the first interaction.
+    
     if (!proposalContainerRef.current || !noButtonRef.current) return;
     
     const container = proposalContainerRef.current.getBoundingClientRect();
