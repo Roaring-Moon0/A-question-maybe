@@ -219,7 +219,7 @@ export default function HeartfeltPage() {
   };
 
   const handleNoClick = () => {
-    if (noCount > 10) {
+    if (noCount >= 10) {
       handleProposalResponse('no');
     } else {
       handleNoInteraction();
@@ -314,10 +314,7 @@ export default function HeartfeltPage() {
                   <Button 
                       size="lg" 
                       className="crayon-effect bg-primary/80 hover:bg-primary text-primary-foreground text-lg px-8 py-6 rounded-2xl journey-button" 
-                      onClick={() => {
-                        setAppState('form');
-                        setTimeout(() => scrollToRef(sectionRefs.formIntro), 100);
-                      }}
+                      onClick={() => scrollToRef(sectionRefs.formIntro)}
                   >
                       Begin the Journey <Heart className="ml-2 fill-white w-5 h-5 transition-transform" />
                   </Button>
@@ -562,7 +559,7 @@ export default function HeartfeltPage() {
                               isDodging && "absolute"
                             )}
                             onMouseEnter={handleNoInteraction}
-                            onTouchStart={handleNoInteraction}
+                            onTouchStart={(e) => { e.preventDefault(); handleNoInteraction(); }}
                             onClick={handleNoClick}
                             style={isDodging ? { top: noPosition.y, left: noPosition.x, transition: 'top 0.3s, left 0.3s' } : {}}
                           >
