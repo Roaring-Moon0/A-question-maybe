@@ -7,10 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { generateRomanticMessage, type RomanticMessageInput } from '@/ai/flows/generate-romantic-message';
-import { saveProposalResponse } from '@/app/actions';
 import { useToast } from '@/components/ui/use-toast';
 import { Heart, Smile, Wand2, Feather, Sparkles, Film, Brush, Gift, MessageCircleQuestion } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -24,7 +24,7 @@ import { FloatingHearts } from '@/components/heartfelt-unveiling/floating-hearts
 import { Typewriter } from '@/components/heartfelt-unveiling/typewriter';
 import { Confetti } from '@/components/heartfelt-unveiling/confetti';
 import { Loader } from '@/components/heartfelt-unveiling/loader';
-import { useAuth, useUser, initiateAnonymousSignIn } from '@/firebase';
+import { useAuth, useUser, initiateAnonymousSignIn, useFirestore } from '@/firebase';
 
 
 const formSchema = z.object({
@@ -76,6 +76,7 @@ export default function HeartfeltPage() {
   const { toast } = useToast();
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
+  const firestore = useFirestore();
 
   const sectionRefs = {
     intro: useRef<HTMLDivElement>(null),
@@ -159,25 +160,46 @@ export default function HeartfeltPage() {
       toast({ title: "Authentication error", description: "Could not identify user. Please try again." });
       return;
     }
+    if (!firestore) {
+      toast({ title: "Database error", description: "Could not connect to the database." });
+      return;
+    }
+
     setProposalStatus(response);
+    
+    const values = form.getValues();
+    const dataToSave = {
+      ownerId: user.uid,
+      memory: values.favoriteMemory,
+      personalityWord: values.personality,
+      selectedEmoji: values.emotion,
+      tone: values.tone,
+      favoriteThing: values.favoriteThing,
+      generatedMessage: generatedMessage,
+      proposalResponse: response,
+      timestamp: serverTimestamp(),
+    };
+
     try {
-        await saveProposalResponse({
-            ...form.getValues(),
-            message: generatedMessage,
-            response,
-            ownerId: user.uid,
-        });
+        const responseCollection = collection(firestore, 'userResponses');
+        addDoc(responseCollection, dataToSave)
+          .catch(e => {
+            console.error("Error adding document: ", e);
+            // Optionally re-throw or handle with a specific error message
+            throw new Error("Failed to save response to the database.");
+          });
     } catch (error) {
         console.error("Failed to save response:", error);
         toast({ title: "Couldn't save the moment", description: "But don't worry, it's forever in our hearts." });
     }
   };
 
+
   const handleNoInteraction = () => {
-    if (isDodging && noCount > 0) return;
+    if (isDodging) return;
     if (!proposalContainerRef.current || !noButtonRef.current) return;
     
-    if (!isDodging) {
+    if (noCount === 0) {
       setIsDodging(true);
     }
 
