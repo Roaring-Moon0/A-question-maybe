@@ -2,65 +2,19 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    //============================================================
-    // Helper Functions
-    //============================================================
+    function isSignedIn() {
+      return request.auth != null;
+    }
 
-    // /**
-    //  * isSignedIn
-    //  * Checks if the user making the request is authenticated.
-    //  */
-    // function isSignedIn() {
-    //   return request.auth != null;
-    // }
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
 
-    // /**
-    //  * isOwner
-    //  * Checks if the authenticated user's UID matches the provided userId.
-    //  * This is the standard pattern for verifying document ownership.
-    //  */
-    // function isOwner(userId) {
-    //   return isSignedIn() && auth.uid == userId;
-    // }
-
-    // /**
-    //  * isExistingOwner
-    //  * Ensures a document exists before checking for ownership.
-    //  * CRITICAL: Use for all update and delete operations to prevent acting
-    //  * on non-existent data.
-    //  */
-    // function isExistingOwner(userId) {
-    //   return isOwner(userId) && resource != null;
-    // }
-
-
-    /**
-     * @description
-     *   Denies all access to user responses.
-     *   CRITICAL: This is a placeholder rule because the 'UserResponse' data
-     *   model is missing an 'ownerId' field, making secure access impossible.
-     * @path
-     *   /userResponses/{userResponseId}
-     * @allow
-     *   None. All operations are currently denied to prevent data leaks.
-     * @deny
-     *   Any user attempting to read or write a response document.
-     * @principle
-     *   Defaults to a secure (fully-denied) posture when the data model lacks
-     *   the necessary fields (e.g., 'ownerId') for authorization.
-     */
     match /userResponses/{userResponseId} {
-      // CRITICAL: Cannot implement secure access rules. The 'UserResponse' entity is
-      // missing an 'ownerId' or 'authorId' field to associate the data with a user.
-      // Reads are disabled to prevent exposing one user's private responses to another.
-      allow get: if false; // TODO: Change to `if isOwner(resource.data.ownerId);` after adding ownerId field.
-      allow list: if false; // TODO: Listing must be secured with a query on the ownerId field.
-
-      // CRITICAL: Writes are disabled because ownership cannot be verified upon creation,
-      // update, or deletion. This prevents any user from modifying any other user's data.
-      allow create: if request.auth.uid != null; // TODO: Add `request.resource.data.ownerId == request.auth.uid` validation.
-      allow update: if request.auth.uid != null; // TODO: Change to `if isExistingOwner(resource.data.ownerId);`
-      allow delete: if request.auth.uid != null; // TODO: Change to `if isExistingOwner(resource.data.ownerId);`
+      allow read: if isOwner(resource.data.ownerId);
+      allow list: if false; // Prevent listing all responses
+      allow create: if isSignedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update, delete: if isOwner(resource.data.ownerId);
     }
   }
 }

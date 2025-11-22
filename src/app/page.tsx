@@ -24,6 +24,7 @@ import { FloatingHearts } from '@/components/heartfelt-unveiling/floating-hearts
 import { Typewriter } from '@/components/heartfelt-unveiling/typewriter';
 import { Confetti } from '@/components/heartfelt-unveiling/confetti';
 import { Loader } from '@/components/heartfelt-unveiling/loader';
+import { useAuth, useUser, initiateAnonymousSignIn } from '@/firebase';
 
 
 const formSchema = z.object({
@@ -73,6 +74,8 @@ export default function HeartfeltPage() {
   const proposalContainerRef = useRef<HTMLDivElement>(null);
 
   const { toast } = useToast();
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
 
   const sectionRefs = {
     intro: useRef<HTMLDivElement>(null),
@@ -89,6 +92,12 @@ export default function HeartfeltPage() {
     }, 2500);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      initiateAnonymousSignIn(auth);
+    }
+  }, [isUserLoading, user, auth]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -123,7 +132,12 @@ export default function HeartfeltPage() {
 
     try {
       const values = form.getValues();
-      const input: RomanticMessageInput = { ...values };
+      const input: RomanticMessageInput = {
+        favoriteMemory: values.favoriteMemory,
+        personality: values.personality,
+        tone: values.tone,
+        favoriteThing: values.favoriteThing,
+      };
       const result = await generateRomanticMessage(input);
       setGeneratedMessage(result.message);
     } catch (error) {
@@ -141,13 +155,17 @@ export default function HeartfeltPage() {
   };
   
   const handleProposalResponse = async (response: 'yes' | 'no') => {
+    if (!user) {
+      toast({ title: "Authentication error", description: "Could not identify user. Please try again." });
+      return;
+    }
     setProposalStatus(response);
     try {
         await saveProposalResponse({
             ...form.getValues(),
             message: generatedMessage,
             response,
-            timestamp: new Date(),
+            ownerId: user.uid,
         });
     } catch (error) {
         console.error("Failed to save response:", error);
@@ -579,7 +597,3 @@ export default function HeartfeltPage() {
     </AnimatePresence>
   );
 }
-
-    
-
-    

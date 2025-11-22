@@ -6,9 +6,9 @@
       "type": "object",
       "description": "Stores user responses collected during the 'Heartfelt Unveiling' experience.",
       "properties": {
-        "id": {
+        "ownerId": {
           "type": "string",
-          "description": "Unique identifier for the user response."
+          "description": "The UID of the authenticated user who owns this response."
         },
         "memory": {
           "type": "string",
@@ -45,7 +45,7 @@
         }
       },
       "required": [
-        "id",
+        "ownerId",
         "memory",
         "personalityWord",
         "selectedEmoji",
@@ -59,7 +59,6 @@
   },
   "auth": {
     "providers": [
-      "password",
       "anonymous"
     ]
   },
