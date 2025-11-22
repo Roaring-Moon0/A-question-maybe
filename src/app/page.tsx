@@ -115,6 +115,13 @@ export default function HeartfeltPage() {
   const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
+  
+  const handleBeginJourney = () => {
+    setAppState('form');
+    setTimeout(() => {
+      scrollToRef(sectionRefs.formIntro);
+    }, 100);
+  };
 
   const handleGenerateMessage = async () => {
     const isValid = await form.trigger();
@@ -196,16 +203,13 @@ export default function HeartfeltPage() {
 
 
   const handleNoInteraction = () => {
-    if (isDodging && noCount < 10) return; // Don't trigger if already dodging within limit
-    const newCount = noCount + 1;
-    setNoCount(newCount);
-
-    if (newCount > 10) {
-      setIsDodging(false); // Stop dodging after 10 attempts.
+    if (noCount >= 10) {
+      setIsDodging(false);
       return;
     }
 
-    setIsDodging(true); // Start dodging on the first interaction.
+    setIsDodging(true);
+    setNoCount(prev => prev + 1);
     
     if (!proposalContainerRef.current || !noButtonRef.current) return;
     
@@ -314,7 +318,7 @@ export default function HeartfeltPage() {
                   <Button 
                       size="lg" 
                       className="crayon-effect bg-primary/80 hover:bg-primary text-primary-foreground text-lg px-8 py-6 rounded-2xl journey-button" 
-                      onClick={() => scrollToRef(sectionRefs.formIntro)}
+                      onClick={handleBeginJourney}
                   >
                       Begin the Journey <Heart className="ml-2 fill-white w-5 h-5 transition-transform" />
                   </Button>
