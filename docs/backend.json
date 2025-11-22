@@ -1,0 +1,87 @@
+{
+  "entities": {
+    "UserResponse": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserResponse",
+      "type": "object",
+      "description": "Stores user responses collected during the 'Heartfelt Unveiling' experience.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user response."
+        },
+        "memory": {
+          "type": "string",
+          "description": "User's favorite memory entered in the memory input field."
+        },
+        "personalityWord": {
+          "type": "string",
+          "description": "User's one-word description of the other person."
+        },
+        "selectedEmoji": {
+          "type": "string",
+          "description": "Emoji selected by the user to express their feelings."
+        },
+        "tone": {
+          "type": "string",
+          "description": "Tone selected by the user for the message (Poetic, Flirty, or Silly)."
+        },
+        "favoriteThing": {
+          "type": "string",
+          "description": "User's favorite thing about the other person."
+        },
+        "generatedMessage": {
+          "type": "string",
+          "description": "AI-generated romantic message based on the user's inputs."
+        },
+        "proposalResponse": {
+          "type": "string",
+          "description": "User's response to the proposal (Yes or No)."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the user submitted the response.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "memory",
+        "personalityWord",
+        "selectedEmoji",
+        "tone",
+        "favoriteThing",
+        "generatedMessage",
+        "proposalResponse",
+        "timestamp"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/userResponses/{userResponseId}",
+        "definition": {
+          "entityName": "UserResponse",
+          "schema": {
+            "$ref": "#/backend/entities/UserResponse"
+          },
+          "description": "Stores user responses collected during the 'Heartfelt Unveiling' experience.",
+          "params": [
+            {
+              "name": "userResponseId",
+              "description": "Unique identifier for the user response document."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The data structure is designed to store user responses collected during the 'Heartfelt Unveiling' experience. A single collection `userResponses` is used to store all responses. Each document in this collection represents a single user's response, including their memory, personality word, selected emoji, tone, favorite thing, generated message, proposal response, and timestamp.\n\nThis structure provides Authorization Independence because there is no reliance on parent document data. Security rules can be written based on the `request.auth.uid` and potentially limiting access based on timestamp or other document data for administrative purposes. Because all data for a user is stored in a single document without needing to access other collections or parent documents for authorization, this design supports atomic operations and simplifies debugging.\n\nThis structure supports the required QAPs (Rules are not Filters) because read operations are performed on a single collection with homogeneous data, which allows to set easily definable security rules. Furthermore, this setup provides clarity and ease for debugging and managing user data."
+  }
+}
