@@ -156,6 +156,7 @@ export default function HeartfeltPage() {
   };
 
   const handleNoInteraction = () => {
+    if (isDodging && noCount > 0) return;
     if (!proposalContainerRef.current || !noButtonRef.current) return;
     
     if (!isDodging) {
