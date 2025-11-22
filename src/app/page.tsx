@@ -196,19 +196,20 @@ export default function HeartfeltPage() {
 
 
   const handleNoInteraction = () => {
-    if (isDodging) return;
-    if (!proposalContainerRef.current || !noButtonRef.current) return;
-    
-    if (noCount === 0) {
-      setIsDodging(true);
-    }
+    const newCount = noCount + 1;
+    setNoCount(newCount);
 
-    setNoCount(c => c + 1);
-    if (noCount >= 9) {
-      setIsDodging(false); // Stop dodging
+    if (newCount > 10) {
+      setIsDodging(false); // Stop dodging after 10 attempts.
       return;
     }
 
+    if (!isDodging) {
+      setIsDodging(true); // Start dodging on the first interaction.
+    }
+
+    if (!proposalContainerRef.current || !noButtonRef.current) return;
+    
     const container = proposalContainerRef.current.getBoundingClientRect();
     const button = noButtonRef.current.getBoundingClientRect();
     
@@ -217,6 +218,15 @@ export default function HeartfeltPage() {
 
     setNoPosition({ x: newX, y: newY });
   };
+
+  const handleNoClick = () => {
+    if (noCount > 10) {
+      handleProposalResponse('no');
+    } else {
+      handleNoInteraction();
+    }
+  };
+
 
   const emotionEmojis = useMemo(() => [
     { emoji: '💫', label: 'Dazzled' },
@@ -554,11 +564,7 @@ export default function HeartfeltPage() {
                             )}
                             onMouseEnter={handleNoInteraction}
                             onTouchStart={handleNoInteraction}
-                            onClick={() => {
-                              if (!isDodging) {
-                                handleProposalResponse('no')
-                              }
-                            }}
+                            onClick={handleNoClick}
                             style={isDodging ? { top: noPosition.y, left: noPosition.x, transition: 'top 0.3s, left 0.3s' } : {}}
                           >
                             No 😔
